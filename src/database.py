@@ -1,7 +1,6 @@
-import datetime
 from typing import Sequence, Any, Dict, List, AsyncGenerator, Annotated, TypeVar
 
-from sqlalchemy import Insert, Update, Select, Delete
+from sqlalchemy import Insert, Update, Select, Delete, String
 from sqlalchemy.exc import ResourceClosedError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, mapped_column
@@ -66,5 +65,6 @@ async def execute(
 
 
 intpk = Annotated[int, mapped_column(primary_key=True, autoincrement=True)]
+str128 = Annotated[str, mapped_column(String(128))]
 
 ModelType = TypeVar('ModelType', bound=Base)
