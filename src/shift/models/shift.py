@@ -11,7 +11,7 @@ class ShiftTask(Base):
     __tablename__ = 'shift_task'
 
     id: Mapped[intpk]
-    status: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_closed: Mapped[bool] = mapped_column(Boolean, default=False)
     task: Mapped[str128]
     work_center: Mapped[str128]
     shift: Mapped[str128]

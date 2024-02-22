@@ -1,16 +1,16 @@
-from typing import Generic, Sequence, TypeVar
+from typing import Generic, Sequence, TypeVar, Type
 
 from fastapi import HTTPException, status
 from pydantic import BaseModel
 
-from src.database import Base
+from src.database import ModelType
 from src.shift.data.base import CrudBase
 from src.shift.exceptions import DoesNotExistDB, DuplicateDb
 
-ModelType = TypeVar('ModelType', bound=Base)
 CrudType = TypeVar('CrudType', bound=CrudBase)
 CreateSchemaType = TypeVar('CreateSchemaType', bound=BaseModel)
 UpdateSchemaType = TypeVar('UpdateSchemaType', bound=BaseModel)
+FilterSchemaType = TypeVar('FilterSchemaType', bound=BaseModel)
 
 
 class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaType]):
@@ -18,8 +18,11 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
     def __init__(self, orm_model: CrudType) -> None:
         self.orm_model = orm_model
 
-    async def list(self) -> Sequence[ModelType]:
-        return await self.orm_model.select_all()
+    async def list(self, offset: int, limit: int, filters: FilterSchemaType) -> Sequence[ModelType]:
+        filters = filters.model_dump(exclude_none=True)
+        return await self.orm_model.select_all(
+            offset, limit, filters
+        )
 
     async def get_obj(self, obj_id: int | None) -> ModelType | None:
 
@@ -29,7 +32,7 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
         except DoesNotExistDB:
             obj_name = self.orm_model.model.__name__
             raise HTTPException(
-                status.HTTP_400_BAD_REQUEST,
+                status.HTTP_404_NOT_FOUND,
                 detail=f'There are no {obj_name} with this id.'
             )
 
@@ -43,7 +46,7 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
         except DuplicateDb:
             obj_name = self.orm_model.model.__name__
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f'This {obj_name} already exists.'
             )
 
@@ -51,6 +54,13 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
 
         await self.orm_model.update(obj_id, new_values)
         obj = await self.get_obj(obj_id=obj_id)
+        return obj
+    
+    async def partial_update_obj(self, obj_id: int, new_values: UpdateSchemaType) -> ModelType | None:
+
+        data = new_values.model_dump(exclude_unset=True)
+        await self.orm_model.update(obj_id, data)
+        obj = await self.get_obj(obj_id)
         return obj
 
     async def delete_obj(self, obj_id: int) -> None:
