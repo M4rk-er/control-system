@@ -1,8 +1,8 @@
 import datetime
-from src.shift.models.shift import ShiftTask
-from src.shift.data.shift import shift_orm, ShiftORM
-from src.shift.schemas.shift import ShiftAdd, ShiftUpdate
-from src.shift.services.base import BaseService
+from src.models.shift import ShiftTask
+from src.data.shift import shift_orm, ShiftORM
+from src.schemas.shift import ShiftAdd, ShiftUpdate
+from src.services.base import BaseService
 
 
 class ShiftService(BaseService[ShiftTask, ShiftORM, ShiftAdd, ShiftUpdate]):

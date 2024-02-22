@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, Query
-from src.shift.schemas.shift import Shift as ShiftSchema, ShiftAdd, ShiftUpdate, ShiftsFiltering
-from src.shift.services.shift_service import shift_service
+from src.schemas.shift import Shift as ShiftSchema, ShiftAdd, ShiftUpdate, ShiftsFiltering
+from src.services.shift_service import shift_service
 
 
 shift_router = APIRouter(prefix='/shifts', tags=['Shifts'])

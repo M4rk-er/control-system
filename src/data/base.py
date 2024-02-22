@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import Base, execute, fetch_all, fetch_one
-from src.shift.exceptions import DoesNotExistDB, DuplicateDb
+from src.exceptions import DoesNotExistDB, DuplicateDb
 
 ModelType = TypeVar('ModelType', bound=Base)
 CreateSchemaType = TypeVar('CreateSchemaType', bound=BaseModel)

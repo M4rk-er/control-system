@@ -4,8 +4,8 @@ from fastapi import HTTPException, status
 from pydantic import BaseModel
 
 from src.database import ModelType
-from src.shift.data.base import CrudBase
-from src.shift.exceptions import DoesNotExistDB, DuplicateDb
+from src.data.base import CrudBase
+from src.exceptions import DoesNotExistDB, DuplicateDb
 
 CrudType = TypeVar('CrudType', bound=CrudBase)
 CreateSchemaType = TypeVar('CreateSchemaType', bound=BaseModel)

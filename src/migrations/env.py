@@ -10,7 +10,7 @@ from alembic import context
 from src.config import settings
 from src.database import Base
 
-from src.shift.models.shift import ShiftTask
+from src.models.shift import ShiftTask
 
 config = context.config
 config.set_main_option('sqlalchemy.url', settings.DB_URL)

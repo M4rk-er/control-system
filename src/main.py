@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.shift.web.shift import shift_router
+from src.web.shift import shift_router
 
 
 app = FastAPI()
