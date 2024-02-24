@@ -14,3 +14,8 @@ class ProductSchema(BaseModel):
     sku: str
     is_aggregated: bool
     aggregated_at: bool | None
+
+
+class ProductAggregate(BaseModel):
+    shift_id: int
+    sku: str

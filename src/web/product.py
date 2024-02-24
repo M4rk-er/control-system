@@ -13,3 +13,10 @@ product_router = APIRouter(prefix='/products', tags=['Products'])
 )
 async def product_add(product=Depends(product_service.create_products)):
     return product
+
+
+@product_router.post('/aggregate')
+async def product_aggregate(
+    aggregate=Depends(product_service.aggregate_product)
+):
+    return aggregate

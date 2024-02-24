@@ -37,7 +37,7 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
             obj_name = self.orm_model.model.__name__
             raise HTTPException(
                 status.HTTP_404_NOT_FOUND,
-                detail=f'There are no {obj_name} with this id.'
+                detail=f'There are no {obj_name}.'
             )
 
     async def create_obj(self, data: CreateSchemaType) -> ModelType | None:
