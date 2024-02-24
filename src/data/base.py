@@ -17,7 +17,9 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]) -> None:
         self.model = model
 
-    async def select_all(self, offset: Optional[int], limit: Optional[int], filters) -> Sequence[ModelType]:
+    async def select_all(
+        self, offset: Optional[int], limit: Optional[int], filters
+    ) -> Sequence[ModelType]:
 
         query = (
             select(self.model)
@@ -54,7 +56,9 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         except IntegrityError:
             raise DuplicateDb
 
-    async def update(self, pk: int, obj_in: UpdateSchemaType | dict) -> int | None:
+    async def update(
+        self, pk: int, obj_in: UpdateSchemaType | dict
+    ) -> int | None:
 
         stmt = (
             update(self.model)

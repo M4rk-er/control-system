@@ -1,17 +1,18 @@
-from src.services.base import BaseService
-from src.models.product import Product
 from src.data.product import ProductOrm, product_orm
-from src.schemas.product import ProductAdd
 from src.exceptions import DuplicateDb
-
+from src.models.product import Product
+from src.schemas.product import ProductAdd
+from src.services.base import BaseService
 from src.services.shift_service import shift_service
 
 
 class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
-    
-    async def create_products(self, product_data: list[ProductAdd]) -> list[Product]:
-        created_products = []
 
+    async def create_products(
+        self, product_data: list[ProductAdd]
+    ) -> list[Product]:
+
+        created_products = []
         for product in product_data:
 
             filters = self.__get_shift_filters(product)
@@ -29,7 +30,6 @@ class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
                 pass
 
         return created_products
-
 
     def __get_shift_filters(self, product_data: ProductAdd) -> dict:
         return product_data.model_dump(exclude={'sku'})

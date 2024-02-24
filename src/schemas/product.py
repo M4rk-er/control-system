@@ -1,6 +1,6 @@
-from pydantic import BaseModel, ConfigDict
-
 from datetime import date
+
+from pydantic import BaseModel
 
 
 class ProductAdd(BaseModel):

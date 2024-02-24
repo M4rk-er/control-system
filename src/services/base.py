@@ -1,4 +1,4 @@
-from typing import Generic, Sequence, TypeVar, Any
+from typing import Generic, Sequence, TypeVar
 
 from fastapi import HTTPException, status
 from pydantic import BaseModel
@@ -18,10 +18,13 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
     def __init__(self, orm_model: CrudType) -> None:
         self.orm_model = orm_model
 
-    async def list_objs(self, offset: int, limit: int, **filters) -> Sequence[ModelType]:
-        return await self.orm_model.select_all(
-            offset, limit, filters
-        )
+    async def list_objs(
+        self, offset: int, limit: int, **filters
+    ) -> Sequence[ModelType]:
+
+        return await self.orm_model.select_all(offset,
+                                               limit,
+                                               filters)
 
     async def get_obj(self, obj_id: int | None, **filters) -> ModelType | None:
 
@@ -52,13 +55,17 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
                 detail=f'This {obj_name} already exists.'
             )
 
-    async def update_obj(self, obj_id: int, new_values: UpdateSchemaType) -> ModelType | None:
+    async def update_obj(
+        self, obj_id: int, new_values: UpdateSchemaType
+    ) -> ModelType | None:
 
         await self.orm_model.update(obj_id, new_values)
         obj = await self.get_obj(obj_id=obj_id)
         return obj
-    
-    async def partial_update_obj(self, obj_id: int, new_values: UpdateSchemaType) -> ModelType | None:
+
+    async def partial_update_obj(
+        self, obj_id: int, new_values: UpdateSchemaType
+    ) -> ModelType | None:
 
         data = new_values.model_dump(exclude_unset=True)
         await self.orm_model.update(obj_id, data)

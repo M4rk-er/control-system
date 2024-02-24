@@ -1,11 +1,10 @@
-from src.config.database import Base, intpk, str128
-
+from datetime import date, datetime
 from typing import Annotated
 
 import sqlalchemy
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import date, datetime
 
+from src.config.database import Base, intpk, str128
 from src.models.product import Product
 
 

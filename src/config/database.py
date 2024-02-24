@@ -1,12 +1,13 @@
-from typing import Sequence, Any, Dict, List, AsyncGenerator, Annotated, TypeVar
+from typing import (Annotated, Any, AsyncGenerator, Dict, List, Sequence,
+                    TypeVar)
 
-from sqlalchemy import Insert, Update, Select, Delete, String
+from sqlalchemy import Delete, Insert, Select, String, Update
 from sqlalchemy.exc import ResourceClosedError
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
+                                    create_async_engine)
 from sqlalchemy.orm import DeclarativeBase, mapped_column
 
-from src.config.config import settings
-
+from src.config.db_settings import settings
 
 async_engine = create_async_engine(
     url=settings.DB_URL,
