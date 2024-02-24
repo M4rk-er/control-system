@@ -6,6 +6,7 @@ from sqlalchemy.exc import ResourceClosedError
 from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
                                     create_async_engine)
 from sqlalchemy.orm import DeclarativeBase, mapped_column
+from sqlalchemy.pool import NullPool
 
 from src.config.db_settings import settings
 
@@ -13,6 +14,12 @@ async_engine = create_async_engine(
     url=settings.DB_URL,
     echo=True,
 )
+
+if settings.MODE == 'TEST':
+    async_engine = create_async_engine(
+        url=settings.TEST_URL,
+        poolclass=NullPool,
+    )
 
 async_session = async_sessionmaker(autocommit=False,
                                    autoflush=False,

@@ -1,9 +1,9 @@
 from src.data.product import ProductOrm, product_orm
-from src.exceptions import DuplicateDb
+from src.exceptions import DuplicateDb, DoesNotExistDB
 from src.models.product import Product
 from src.schemas.product import ProductAdd
 from src.services.base import BaseService
-from src.services.shift_service import shift_service
+from src.data.shift import shift_orm
 
 
 class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
@@ -14,11 +14,12 @@ class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
 
         created_products = []
         for product in product_data:
-
+            
             filters = self.__get_shift_filters(product)
-            shift = await shift_service.get_obj(None, **filters)
-            if not shift:
-                continue
+            try:
+                shift = await shift_orm.select_by(**filters)
+            except DoesNotExistDB:
+                pass
 
             try:
                 data = {'sku': product.sku, 'shifttask_id': shift.id}
