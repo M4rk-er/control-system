@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from src.config import settings
-from src.database import Base
+from src.config.config import settings
+from src.config.database import Base
 
 from src.models.shift import ShiftTask
 

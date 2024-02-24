@@ -1,9 +1,9 @@
-from typing import Generic, Sequence, TypeVar, Type
+from typing import Generic, Sequence, TypeVar, Any
 
 from fastapi import HTTPException, status
 from pydantic import BaseModel
 
-from src.database import ModelType
+from src.config.database import ModelType
 from src.data.base import CrudBase
 from src.exceptions import DoesNotExistDB, DuplicateDb
 
@@ -18,16 +18,17 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
     def __init__(self, orm_model: CrudType) -> None:
         self.orm_model = orm_model
 
-    async def list(self, offset: int, limit: int, filters: FilterSchemaType) -> Sequence[ModelType]:
-        filters = filters.model_dump(exclude_none=True)
+    async def list_objs(self, offset: int, limit: int, **filters) -> Sequence[ModelType]:
         return await self.orm_model.select_all(
             offset, limit, filters
         )
 
-    async def get_obj(self, obj_id: int | None) -> ModelType | None:
+    async def get_obj(self, obj_id: int | None, **filters) -> ModelType | None:
 
         try:
-            return await self.orm_model.select_by(id=obj_id)
+            if obj_id:
+                filters = {'id': obj_id, **filters}
+            return await self.orm_model.select_by(**filters)
 
         except DoesNotExistDB:
             obj_name = self.orm_model.model.__name__
@@ -39,7 +40,8 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
     async def create_obj(self, data: CreateSchemaType) -> ModelType | None:
 
         try:
-            obj_id = await self.orm_model.insert(data)
+            formated_data = data.model_dump()
+            obj_id = await self.orm_model.insert(formated_data)
             obj = await self.get_obj(obj_id=obj_id)
             return obj
 

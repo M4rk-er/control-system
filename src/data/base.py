@@ -3,9 +3,8 @@ from typing import Generic, Optional, Sequence, Type, TypeVar
 from pydantic import BaseModel
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database import Base, execute, fetch_all, fetch_one
+from src.config.database import Base, execute, fetch_all, fetch_one
 from src.exceptions import DoesNotExistDB, DuplicateDb
 
 ModelType = TypeVar('ModelType', bound=Base)
@@ -31,9 +30,9 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         return result
 
-    async def select_by(self, **kwargs) -> Optional[ModelType]:
+    async def select_by(self, **filters) -> Optional[ModelType]:
 
-        query = select(self.model).filter_by(**kwargs)
+        query = select(self.model).filter_by(**filters)
         result = await fetch_one(query)
 
         if not result:
@@ -41,12 +40,12 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         return result
 
-    async def insert(self, obj_in: CreateSchemaType) -> int | None:
+    async def insert(self, obj_in: dict) -> ModelType | None:
 
         try:
             stmt = (
                 insert(self.model)
-                .values(obj_in.model_dump())
+                .values(obj_in)
                 .returning(self.model.id)
             )
             obj_id = await execute(stmt)

@@ -10,17 +10,26 @@ shift_router = APIRouter(prefix='/shifts', tags=['Shifts'])
 async def get_all_shifts(
     offset: int = Query(0), limit: int = Query(20), filters: ShiftsFiltering = Depends()
 ):
-    shifts = await shift_service.list(offset, limit, filters)
+    filters_dict = filters.model_dump(exclude_none=True)
+    shifts = await shift_service.list_objs(offset, limit, **filters_dict)
     return shifts
 
+
 @shift_router.get('/{obj_id}/', response_model=ShiftSchema)
-async def get_shift(shift = Depends(shift_service.get_obj)):
+async def get_shift(obj_id: int):
+    shift = await shift_service.get_obj(obj_id)
     return shift
 
-@shift_router.post('/', response_model=ShiftSchema, status_code=status.HTTP_201_CREATED)
+
+@shift_router.post(
+    '/',
+    response_model=ShiftSchema,
+    status_code=status.HTTP_201_CREATED,
+)
 async def add_shift(shift_data: ShiftAdd):
     shift = await shift_service.create_obj(shift_data)
     return shift
+
 
 @shift_router.patch('/{obj_id}/', response_model=ShiftSchema)
 async def change_shift(obj_id: int, updated_shift: ShiftUpdate):

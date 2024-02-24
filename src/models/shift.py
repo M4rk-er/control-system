@@ -1,22 +1,24 @@
-from src.database import Base, intpk, str128
+from src.config.database import Base, intpk, str128
 
 from typing import Annotated
 
-from sqlalchemy import Integer, UniqueConstraint, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+import sqlalchemy
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date, datetime
+
+from src.models.product import Product
 
 
 class ShiftTask(Base):
     __tablename__ = 'shift_task'
 
     id: Mapped[intpk]
-    is_closed: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_closed: Mapped[bool] = mapped_column(sqlalchemy.Boolean, default=False)
     task: Mapped[str128]
     work_center: Mapped[str128]
     shift: Mapped[str128]
     brigade: Mapped[str128]
-    batch_number: Mapped[int] = mapped_column(Integer, unique=True)
+    batch_number: Mapped[int] = mapped_column(sqlalchemy.Integer, unique=True)
     batch_date: Mapped[date]
     nomenclature: Mapped[str128]
     EKN_code: Mapped[str128]
@@ -26,6 +28,10 @@ class ShiftTask(Base):
     )]]
     closed_at: Mapped[datetime | None]
 
+    products: Mapped[list['Product']] = relationship(
+        back_populates='shift'
+    )
+
     __table_args__ = (
-        UniqueConstraint('batch_number', 'batch_date'),
+        sqlalchemy.UniqueConstraint('batch_number', 'batch_date'),
     )

@@ -5,7 +5,7 @@ from sqlalchemy.exc import ResourceClosedError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, mapped_column
 
-from src.config import settings
+from src.config.config import settings
 
 
 async_engine = create_async_engine(
@@ -52,7 +52,7 @@ async def fetch_all(query: Select | Insert | Update) -> Sequence[Any]:
 async def execute(
     query: Insert | Update | Delete,
     values: Dict | List | None = None,
-) -> None:
+):
     async with async_session() as conn:
         res = await conn.execute(query, values)
         try:
