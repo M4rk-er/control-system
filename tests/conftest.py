@@ -1,9 +1,17 @@
 import pytest
 from httpx import AsyncClient
+from sqlalchemy import insert
 
+from src.config.database import Base, async_engine, execute
 from src.config.db_settings import settings
-from src.config.database import async_engine, Base
 from src.main import app
+from src.models.shift import ShiftTask
+from tests.utils import DATA_AMOUNT, generate_data_with_nums
+
+pytest_plugins = [
+    # 'tests.fixtures.products',
+    'tests.fixtures.shifts',
+]
 
 
 @pytest.fixture(autouse=True, scope='session')
@@ -22,3 +30,10 @@ async def init_db():
 async def client():
     async with AsyncClient(app=app, base_url='http://testserver') as client:
         yield client
+
+
+@pytest.fixture(scope='session', autouse=True)
+async def shifts(init_db, shift_db):
+    data = generate_data_with_nums(shift_db, DATA_AMOUNT)
+    query = insert(ShiftTask).values(data)
+    await execute(query)

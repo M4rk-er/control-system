@@ -10,6 +10,7 @@ class ObjId(BaseModel):
 
 class BaseShift(BaseModel):
     task: str
+    work_center: str
     shift: str
     brigade: str
     batch_number: int
@@ -26,7 +27,6 @@ class Shift(BaseShift, ObjId):
 
 
 class ShiftAdd(BaseModel):
-    # is_closed: bool = Field(default=False, alias='СтатусЗакрытия')
     task: str = Field(alias='ПредставлениеЗаданияНаСмену')
     work_center: str = Field(alias='РабочийЦентр')
     shift: str = Field(alias='Смена')
@@ -36,15 +36,12 @@ class ShiftAdd(BaseModel):
     nomenclature: str = Field(alias='Номенклатура')
     EKN_code: str = Field(alias='КодЕКН')
     RC_identifier: str = Field(alias='ИдентификаторРЦ')
-    # start_at: datetime = Field(alias='ДатаВремяНачалаСмены')
-    # closed_at: datetime | None = Field(
-    #     default=None, alias='ДатаВремяОкончанияСмены'
-    # )
 
 
 class ShiftUpdate(BaseModel):
     is_closed: Optional[bool] = None
     task: Optional[str] = None
+    work_center: Optional[str] = None
     shift: Optional[str] = None
     brigade: Optional[str] = None
     batch_number: Optional[int] = None

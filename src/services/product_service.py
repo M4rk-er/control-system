@@ -28,8 +28,8 @@ class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
 
             try:
                 data = {'sku': product.sku, 'shifttask_id': shift.id}
-                product_id = await product_orm.insert(data)
-                product_obj = await product_orm.select_by(id=product_id)
+                product_id = await self.orm_model.insert(data)
+                product_obj = await self.orm_model.select_by(id=product_id)
                 created_products.append(product_obj)
 
             except DuplicateDb:

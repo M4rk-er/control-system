@@ -32,7 +32,7 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         return result
 
-    async def select_by(self, **filters) -> Optional[ModelType]:
+    async def select_by(self, **filters) -> ModelType:
 
         query = select(self.model).filter_by(**filters)
         result = await fetch_one(query)

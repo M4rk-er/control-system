@@ -30,7 +30,3 @@ class ShiftTask(Base):
     products: Mapped[list['Product']] = relationship(
         back_populates='shift'
     )
-
-    __table_args__ = (
-        sqlalchemy.UniqueConstraint('batch_number', 'batch_date'),
-    )

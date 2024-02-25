@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, status
 
 from src.schemas.shift import Shift as ShiftSchema
-from src.schemas.shift import ShiftAdd, ShiftsFiltering, ShiftUpdate
+from src.schemas.shift import ShiftsFiltering, ShiftUpdate
 from src.services.shift_service import shift_service
 
 shift_router = APIRouter(prefix='/shifts', tags=['Shifts'])
@@ -29,9 +29,8 @@ async def get_shift(obj_id: int):
     response_model=ShiftSchema,
     status_code=status.HTTP_201_CREATED,
 )
-async def add_shift(shift_data: ShiftAdd):
-    shift = await shift_service.create_obj(shift_data)
-    return shift
+async def add_shift(shifts = Depends(shift_service.shifts_create)):
+    return shifts
 
 
 @shift_router.patch('/{obj_id}/', response_model=ShiftSchema)
