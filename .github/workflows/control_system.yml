@@ -8,6 +8,15 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13.0-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
     steps:
     -
       name: Check out the repo
@@ -32,6 +41,17 @@ jobs:
     - name: Sorting imports with isort
       run: isort src/
 
-    # - name: Run pytest
-    #   run: |
-    #     pytest
+    - name: Run pytest
+      run: |
+        pytest
+        env:
+          name: Run pytest
+        run: pytest
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          MODE=DEV
+          TEST_DB=postgres
