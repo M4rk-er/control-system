@@ -48,10 +48,10 @@ jobs:
           name: Run pytest
         run: pytest
         env:
-          POSTGRES_DB: postgres
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          DB_NAME: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASS: postgres
           MODE=TEST
           TEST_DB=postgres
