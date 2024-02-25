@@ -53,5 +53,5 @@ jobs:
           POSTGRES_PORT: 5432
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          MODE=DEV
+          MODE=TEST
           TEST_DB=postgres
