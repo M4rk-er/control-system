@@ -45,20 +45,14 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     async def insert(self, obj_in: dict) -> ModelType | None:
 
         try:
-            stmt = (
-                insert(self.model)
-                .values(obj_in)
-                .returning(self.model.id)
-            )
+            stmt = insert(self.model).values(obj_in).returning(self.model.id)
             obj_id = await execute(stmt)
             return obj_id
 
         except IntegrityError:
             raise DuplicateDb
 
-    async def update(
-        self, pk: int, obj_in: UpdateSchemaType | dict
-    ) -> int | None:
+    async def update(self, pk: int, obj_in: UpdateSchemaType | dict) -> int | None:
 
         stmt = (
             update(self.model)

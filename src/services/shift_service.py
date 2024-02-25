@@ -1,6 +1,6 @@
 import datetime
 
-from src.data.shift import ShiftORM, shift_orm
+from data.shift_data import ShiftORM, shift_orm
 from src.exceptions import DoesNotExistDB
 from src.models.shift import ShiftTask
 from src.schemas.shift import ShiftAdd, ShiftUpdate
@@ -16,9 +16,7 @@ class ShiftService(BaseService[ShiftTask, ShiftORM, ShiftAdd, ShiftUpdate]):
                 batch_number=shift.batch_number,
                 batch_date=shift.batch_date,
             )
-            shift_obj = await self.shift_update(
-                obj_id=is_shift.id, new_values=shift
-            )
+            shift_obj = await self.shift_update(obj_id=is_shift.id, new_values=shift)
 
         except DoesNotExistDB:
             shift_id = await self.orm_model.insert(shift.model_dump())

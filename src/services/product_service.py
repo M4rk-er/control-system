@@ -2,8 +2,8 @@ from datetime import datetime
 
 from fastapi import HTTPException, status
 
-from src.data.product import ProductOrm, product_orm
-from src.data.shift import shift_orm
+from src.data.product_data import ProductOrm, product_orm
+from src.data.shift_data import shift_orm
 from src.exceptions import DoesNotExistDB, DuplicateDb
 from src.models.product import Product
 from src.schemas.product import ProductAdd, ProductAggregate
@@ -13,9 +13,7 @@ from src.services.shift_service import shift_service
 
 class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
 
-    async def create_products(
-        self, product_data: list[ProductAdd]
-    ) -> list[Product]:
+    async def create_products(self, product_data: list[ProductAdd]) -> list[Product]:
 
         created_products = []
         for product in product_data:
@@ -56,26 +54,23 @@ class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
     ):
 
         if (
-            product and
-            product.is_aggregated and
-            product.shifttask_id == aggregate_data.shift_id
+            product
+            and product.is_aggregated
+            and product.shifttask_id == aggregate_data.shift_id
         ):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f'unique code already used at {product.aggregated_at}'
+                detail=f'unique code already used at {product.aggregated_at}',
             )
 
         if product and product.is_aggregated:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail='unique code is attached to another batch'
+                detail='unique code is attached to another batch',
             )
 
     def __get_updated_product_data(self) -> dict:
-        return {
-            'aggregated_at': datetime.utcnow(),
-            'is_aggregated': True
-        }
+        return {'aggregated_at': datetime.utcnow(), 'is_aggregated': True}
 
 
 product_service: ProductService = ProductService(product_orm)

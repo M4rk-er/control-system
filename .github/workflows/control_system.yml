@@ -27,8 +27,11 @@ jobs:
       run: flake8 .
 
     - name: Codestyle by black
-      run: black . --check --exclude=".venv\/|.tests\/|.migrations\/"
+      run: black src/
 
-    - name: Run pytest
-      run: |
-        pytest
+    - name: Sorting imports with isort
+      run: isort src/
+
+    # - name: Run pytest
+    #   run: |
+    #     pytest

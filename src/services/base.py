@@ -22,9 +22,7 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
         self, offset: int, limit: int, **filters
     ) -> Sequence[ModelType]:
 
-        return await self.orm_model.select_all(offset,
-                                               limit,
-                                               filters)
+        return await self.orm_model.select_all(offset, limit, filters)
 
     async def get_obj(self, obj_id: int | None, **filters) -> ModelType | None:
 
@@ -36,8 +34,7 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
         except DoesNotExistDB:
             obj_name = self.orm_model.model.__name__
             raise HTTPException(
-                status.HTTP_404_NOT_FOUND,
-                detail=f'There are no {obj_name}.'
+                status.HTTP_404_NOT_FOUND, detail=f'There are no {obj_name}.'
             )
 
     async def create_obj(self, data: CreateSchemaType) -> ModelType | None:
@@ -52,7 +49,7 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
             obj_name = self.orm_model.model.__name__
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f'This {obj_name} already exists.'
+                detail=f'This {obj_name} already exists.',
             )
 
     async def update_obj(
@@ -82,5 +79,5 @@ class BaseService(Generic[ModelType, CrudType, CreateSchemaType, UpdateSchemaTyp
             obj_name = self.orm_model.model.__name__
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
-                detail=f'There are no {obj_name} with this id.'
+                detail=f'There are no {obj_name} with this id.',
             )

@@ -22,11 +22,7 @@ class ShiftTask(Base):
     nomenclature: Mapped[str128]
     EKN_code: Mapped[str128]
     RC_identifier: Mapped[str128]
-    start_at: Mapped[Annotated[datetime, mapped_column(
-        default=datetime.utcnow
-    )]]
+    start_at: Mapped[Annotated[datetime, mapped_column(default=datetime.utcnow)]]
     closed_at: Mapped[datetime | None]
 
-    products: Mapped[list['Product']] = relationship(
-        back_populates='shift'
-    )
+    products: Mapped[list['Product']] = relationship(back_populates='shift')

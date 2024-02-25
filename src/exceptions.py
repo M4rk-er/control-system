@@ -1,4 +1,3 @@
-
 class DuplicateDb(Exception):
     pass
 

@@ -11,7 +11,7 @@ shift_router = APIRouter(prefix='/shifts', tags=['Shifts'])
 async def get_all_shifts(
     offset: int = Query(0),
     limit: int = Query(20),
-    filters: ShiftsFiltering = Depends()
+    filters: ShiftsFiltering = Depends(),
 ):
     filters_dict = filters.model_dump(exclude_none=True)
     shifts = await shift_service.list_objs(offset, limit, **filters_dict)
