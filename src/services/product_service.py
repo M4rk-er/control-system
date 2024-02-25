@@ -70,11 +70,12 @@ class ProductService(BaseService[Product, ProductOrm, ProductAdd, ProductAdd]):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail='unique code is attached to another batch'
             )
-        
+
     def __get_updated_product_data(self) -> dict:
         return {
             'aggregated_at': datetime.utcnow(),
             'is_aggregated': True
         }
+
 
 product_service: ProductService = ProductService(product_orm)

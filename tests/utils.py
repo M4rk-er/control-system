@@ -1,10 +1,16 @@
-from datetime import date
-import pytest
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from fastapi import status
 
-DATA_AMOUNT = 21
+import pytest
+
+
 PAGINATION_SIZE = 20
-CREATED_ID = DATA_AMOUNT + 1
+
+SHIFT_DATA_AMOUNT = 21
+SHIFT_ID = SHIFT_DATA_AMOUNT + 1
+
+PRODUCT_DATA_AMOUNT = 7
+PRODUCT_ID = PRODUCT_DATA_AMOUNT + 1
 
 
 def generate_data_with_nums(data: dict, nums: int):
@@ -62,3 +68,43 @@ def expected_error_response(obj, field_name):
             'input': object_without_field(obj, field_name),
             'url': 'https://errors.pydantic.dev/2.6/v/missing'}]
     }
+
+
+def get_aggregate_errors_params() -> list:
+    return [
+        (
+            {'sku': 'unexistssku', 'shift_id': 456},
+            status.HTTP_404_NOT_FOUND,
+            {'detail': 'There are no Product.'},
+        ),
+        (
+            {'sku': 'skuintest', 'shift_id': 999},
+            status.HTTP_404_NOT_FOUND,
+            {'detail': 'There are no ShiftTask.'},
+        ),
+        (
+            {'sku': 'skuintest', 'shift_id': 1},
+            status.HTTP_400_BAD_REQUEST,
+            {'detail': f'unique code already used ', },
+        ),
+        (
+            {'sku': 'skuintest', 'shift_id': 2},
+            status.HTTP_400_BAD_REQUEST,
+            {'detail': 'unique code is attached to another batch'},
+        ),
+    ]
+
+
+def get_invalid_product_params() -> list:
+    return [
+        (
+            [{'sku': 'testsku', 'batch_number': 987, 'batch_date': str(date(2000, 1, 1))}],
+            status.HTTP_201_CREATED,
+            [],
+        ),
+        (
+            [{'sku': 'unexisted', 'batch_number': 123, 'batch_date': str(date(2024, 1, 1))}],
+            status.HTTP_201_CREATED,
+            [],
+        ),
+    ]

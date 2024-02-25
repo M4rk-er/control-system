@@ -29,7 +29,7 @@ async def get_shift(obj_id: int):
     response_model=ShiftSchema,
     status_code=status.HTTP_201_CREATED,
 )
-async def add_shift(shifts = Depends(shift_service.shifts_create)):
+async def add_shift(shifts=Depends(shift_service.shifts_create)):
     return shifts
 
 

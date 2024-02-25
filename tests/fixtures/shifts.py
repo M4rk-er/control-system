@@ -2,10 +2,10 @@ from datetime import date
 
 import pytest
 
-from tests.utils import (CREATED_ID,
-                         expected_error_response,
+from tests.utils import (expected_error_response,
                          get_time_now,
-                         object_without_field,)
+                         object_without_field,
+                         SHIFT_ID)
 
 
 @pytest.fixture
@@ -22,6 +22,7 @@ def shift_body() -> dict:
         'ИдентификаторРЦ': 'ИдентификаторРЦТест',
     }
     return shift
+
 
 @pytest.fixture
 def updated_shift_request() -> dict:
@@ -42,7 +43,7 @@ def updated_shift_request() -> dict:
 @pytest.fixture
 def updated_shift_response() -> dict:
     shift = {
-        'id': CREATED_ID,
+        'id': SHIFT_ID,
         'task': 'ЗаданиеТестОбновление',
         'shift': 'СменаТесОбновлениет',
         'work_center': 'ЦентрТестОбновление',
@@ -58,10 +59,11 @@ def updated_shift_response() -> dict:
     }
     return shift
 
+
 @pytest.fixture
 def shift_response() -> dict:
     shift = {
-        'id': CREATED_ID,
+        'id': SHIFT_ID,
         'task': 'ЗаданиеТест',
         'shift': 'СменаТест',
         'work_center': 'ЦентрТест',

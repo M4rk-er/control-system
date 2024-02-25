@@ -6,13 +6,16 @@ from src.config.database import Base, async_engine, execute
 from src.config.db_settings import settings
 from src.main import app
 from src.models.shift import ShiftTask
-from tests.utils import DATA_AMOUNT, generate_data_with_nums
+from src.models.product import Product
+
+from tests.utils import SHIFT_DATA_AMOUNT
+from tests.utils import PRODUCT_DATA_AMOUNT
+from tests.utils import generate_data_with_nums
 
 pytest_plugins = [
-    # 'tests.fixtures.products',
+    'tests.fixtures.products',
     'tests.fixtures.shifts',
 ]
-
 
 @pytest.fixture(autouse=True, scope='session')
 async def init_db():
@@ -34,6 +37,13 @@ async def client():
 
 @pytest.fixture(scope='session', autouse=True)
 async def shifts(init_db, shift_db):
-    data = generate_data_with_nums(shift_db, DATA_AMOUNT)
+    data = generate_data_with_nums(shift_db, SHIFT_DATA_AMOUNT)
     query = insert(ShiftTask).values(data)
+    await execute(query)
+
+
+@pytest.fixture(scope='session', autouse=True)
+async def products(init_db, shifts, product_db):
+    data = generate_data_with_nums(product_db, PRODUCT_DATA_AMOUNT)
+    query = insert(Product).values(data)
     await execute(query)
