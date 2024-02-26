@@ -1,6 +1,6 @@
 import datetime
 
-from data.shift_data import ShiftORM, shift_orm
+from src.data.shift_data import ShiftORM, shift_orm
 from src.exceptions import DoesNotExistDB
 from src.models.shift import ShiftTask
 from src.schemas.shift import ShiftAdd, ShiftUpdate

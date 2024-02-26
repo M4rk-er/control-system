@@ -12,7 +12,7 @@ from src.config.db_settings import settings
 
 async_engine = create_async_engine(
     url=settings.DB_URL,
-    echo=True,
+    # echo=True,
 )
 
 if settings.MODE == 'TEST':

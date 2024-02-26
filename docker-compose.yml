@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - dbdata:/var/lib/postgresql/data/
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+    env_file:
+      - .env
+
+  web:
+    build: .
+    restart: always
+    ports:
+     - "8000:8000"
+    command: ["/app/docker/web.sh"]
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+volumes:
+  dbdata:
