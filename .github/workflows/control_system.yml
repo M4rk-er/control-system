@@ -54,6 +54,3 @@ jobs:
     - name: Run pytest
       run: |
         pytest
-        env:
-          name: Run pytest
-        run: pytest
